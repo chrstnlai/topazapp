@@ -7,7 +7,8 @@ export default function AddStamp() {
 
   useFocusEffect(() => {
     const timeoutId = setTimeout(() => {
-      router.push("/notification?changeImage=true"); 
+      const timestamp = Date.now(); 
+      router.push(`/notification?changeImage=true&timestamp=${timestamp}`);
     }, 2000);
 
     return () => clearTimeout(timeoutId);

@@ -1,38 +1,45 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image,  TextInput} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Button } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Link } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
+  // React Navigation Hook
+  const navigation = useNavigation();
+
+  // Expo Router Hook
+  const router = useRouter();
+
   return (
     <>
       {/* Header */}
       <View style={styles.container}>
         <View style={styles.blackSection}>
-        <Text style={styles.welcomeText}>
-          Welcome back, <Text style={styles.highlight}>Sarah!</Text>
-        </Text>
-        <View style={styles.searchBar}>
-        <Ionicons name="search" size={20} color="#aaa" />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Can't find the card you’re looking for?"
-          placeholderTextColor="#aaa"
-        />
-      </View>
-        </View>
-        <View style={styles.remainingSection}>
-          <Link 
-            action={{ 
-              type: 'navigate', 
-              payload: { name: 'Details' },
-            }}
-          >
-            <Image
-              source={require('@/assets/images/hojicard.png')}
-              style={styles.image}
+          <Text style={styles.welcomeText}>
+            Welcome back, <Text style={styles.highlight}>Sarah!</Text>
+          </Text>
+          <View style={styles.searchBar}>
+            <Ionicons name="search" size={20} color="#aaa" />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Can't find the card you’re looking for?"
+              placeholderTextColor="#aaa"
             />
-          </Link>
+          </View>
+        </View>
+
+        <View style={styles.remainingSection}>
+          {/* Navigate using React Navigation */}
+        
+
+          {/* Navigate using Expo Router */}
+          <View style={{ marginTop: 20 }}>
+            <Button
+              title="Go to Notification (Expo Router)"
+              onPress={() => router.push('/notification')}
+            />
+          </View>
         </View>
       </View>
     </>
@@ -60,7 +67,7 @@ const styles = StyleSheet.create({
     position: 'absolute', // Position text over the black section
     top: '50%', // Vertically center the text
     left: '30%', // Horizontally center the text
-    transform: [{ translateX: -100 }, { translateY: -30 }], // Offset to exactly center it
+    transform: [{ translateX: -90 }, { translateY: -30 }], // Offset to exactly center it
   },
   highlight: {
     color: '#FFD700', // Gold color
@@ -75,27 +82,25 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   blackSection: {
-    flex: 1.5, // 1/4 of the screen height
+    flex: 1.5,
     backgroundColor: "#262626",
-    justifyContent: 'center', // Optional: vertically center the content
-    alignItems: 'center', // Optional: horizontally center the content
-    borderBottomLeftRadius: 50, // Rounded bottom-left corner
-    borderBottomRightRadius: 50, // Rounded bottom-right corner
-    overflow: 'hidden', // Ensure content stays within rounded cornersr the content
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+    overflow: 'hidden',
   },
   remainingSection: {
-    flex: 3, // 3/4 of the screen height
-    backgroundColor: "#f5f5f5", // Light gray or any other color
-    justifyContent: 'center', // Center vertically
-    alignItems: 'center', // Center horizontally
+    flex: 3,
+    backgroundColor: "#f5f5f5",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
     width: 250,
     height: 600,
     resizeMode: 'contain',
-    transform: [{ translateX: -10 }, { translateY:-150
-
-    }], 
+    transform: [{ translateX: -10 }, { translateY: -150 }],
   },
   searchBar: {
     flexDirection: "row",
@@ -107,8 +112,6 @@ const styles = StyleSheet.create({
     width:350,
     top:50,
     marginBottom: 20,
-    transform: [{ translateX: -10 }, { translateY: -10
-
-     }], 
+    transform: [{ translateX: -10 }, { translateY: -10 }],
   },
 });

@@ -1,74 +1,56 @@
-import React, { useState, useEffect } from 'react';
+let currentIndex = 0;
+
+function getCurrentImageIndex(): number {
+  return currentIndex;
+}
+
+function incrementImageIndex(imagesLength: number): number {
+  currentIndex = (currentIndex + 1) % imagesLength;
+  return currentIndex;
+}
+
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Image, View } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useLocalSearchParams } from 'expo-router';
 
 export default function Notification() {
-  const { changeImage } = useLocalSearchParams<{ changeImage?: string }>();
-
-  const [currentImage, setCurrentImage] = useState(
-    require('@/assets/images/hojicard.png')
-  );
-  const [imageIndex, setImageIndex] = useState(0); // Track the current image index
+  const { changeImage, timestamp } = useLocalSearchParams<{ changeImage?: string; timestamp?: string }>();
 
   const images = [
     require('@/assets/images/hojicard.png'),
     require('@/assets/images/hojicard1.png'),
     require('@/assets/images/hojicard2.png'),
     require('@/assets/images/hojicard3.png'),
+    require('@/assets/images/hojicard4.png'),
+    require('@/assets/images/hojicard5.png'),
+    require('@/assets/images/hojicard6.png'),
+    require('@/assets/images/hojicard7.png'),
+    require('@/assets/images/hojicard8.png'),
+    require('@/assets/images/hojicardfree.png'),
   ];
 
-  // Load the imageIndex from AsyncStorage on component mount
+  const [imageIndex, setImageIndex] = useState(getCurrentImageIndex());
+
   useEffect(() => {
-    const loadImageIndex = async () => {
-      try {
-        const storedIndex = await AsyncStorage.getItem('currentImageIndex');
-        if (storedIndex !== null) {
-          const parsedIndex = parseInt(storedIndex, 10);
-          if (!isNaN(parsedIndex) && parsedIndex >= 0 && parsedIndex < images.length) {
-            setImageIndex(parsedIndex);
-            setCurrentImage(images[parsedIndex]);
-          }
-        }
-      } catch (error) {
-        console.error('Failed to load image index from storage:', error);
-      }
-    };
-    loadImageIndex();
-  }, []);
-
-  // Update the imageIndex and save it to AsyncStorage when `changeImage` is true
-  useEffect(() => {
-    const updateImageIndex = async () => {
-      if (changeImage === 'true' || imageIndex>=1) {
-        const newIndex = (imageIndex + 1) % images.length;
-        setImageIndex(newIndex);
-        setCurrentImage(images[newIndex]);
-
-        try {
-          await AsyncStorage.setItem('currentImageIndex', newIndex.toString());
-        } catch (error) {
-          console.error('Failed to save image index to storage:', error);
-        }
-      }
-    };
-
-    updateImageIndex();
-  }, [changeImage]);
+    // If we should change the image (each navigation triggers a new timestamp),
+    // increment the index and update state.
+    if (changeImage === 'true' && timestamp) {
+      const newIndex = incrementImageIndex(images.length);
+      setImageIndex(newIndex);
+    } else {
+      // If not changing the image, just ensure we're showing the current index.
+      setImageIndex(getCurrentImageIndex());
+    }
+  }, [changeImage, timestamp]);
 
   return (
     <ThemedView style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image source={currentImage} style={styles.image} />
+        <Image source={images[imageIndex]} style={styles.image} />
       </View>
       <View style={styles.scanContainer}>
-        <ThemedText style={styles.scan}>SCAN TO GET STAMP</ThemedText>
-        <Image
-          source={require('@/assets/images/scan.png')}
-          style={styles.scanImage}
-        />
       </View>
     </ThemedView>
   );
@@ -78,7 +60,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center',  
     backgroundColor: '#F3F4FF',
   },
   imageContainer: {
