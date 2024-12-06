@@ -1,19 +1,44 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
+import { getCurrentImageIndex } from './sharedState'; // Import from shared state
 
 export default function HomeScreen() {
-  // React Navigation Hook
   const navigation = useNavigation();
-
-  // Expo Router Hook
   const router = useRouter();
+
+  const images = [
+    require('@/assets/images/hojicard.png'),
+    require('@/assets/images/hojicard1.png'),
+    require('@/assets/images/hojicard2.png'),
+    require('@/assets/images/hojicard3.png'),
+    require('@/assets/images/hojicard4.png'),
+    require('@/assets/images/hojicard5.png'),
+    require('@/assets/images/hojicard6.png'),
+    require('@/assets/images/hojicard7.png'),
+    require('@/assets/images/hojicard8.png'),
+    require('@/assets/images/hojicardfree.png'),
+  ];
+
+  const [imageIndex, setImageIndex] = useState(getCurrentImageIndex());
+
+  // If you need the HomeScreen to update dynamically whenever the image changes
+  // you could implement a mechanism to re-render (e.g. by listening to focus events)
+  // For now, it will show the last known index at the time of navigation.
+  const handleSwipeRight = () => {
+    // If you also want to go backwards when swiping right:
+    setImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  };
+  
+  const handleCardPress = () => {
+    // Navigate to notification when the image is tapped
+    router.push('/notification');
+  };
 
   return (
     <>
-      {/* Header */}
       <View style={styles.container}>
         <View style={styles.blackSection}>
           <Text style={styles.welcomeText}>
@@ -30,15 +55,13 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.remainingSection}>
-          {/* Navigate using React Navigation */}
-        
-
-          {/* Navigate using Expo Router */}
           <View style={{ marginTop: 20 }}>
-            <Button
-              title="Go to Notification (Expo Router)"
-              onPress={() => router.push('/notification')}
-            />
+            <TouchableOpacity onPress={() => router.push('/notification')}>
+              <Image
+                source={images[imageIndex]} // Use the currentIndex image
+                style={styles.image}
+              />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -64,13 +87,12 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 24,
     color: 'white',
-    position: 'absolute', // Position text over the black section
-    top: '50%', // Vertically center the text
-    left: '30%', // Horizontally center the text
-    transform: [{ translateX: -90 }, { translateY: -30 }], // Offset to exactly center it
+    position: 'absolute',
+    top: '40%',
+    left: '10%',
   },
   highlight: {
-    color: '#FFD700', // Gold color
+    color: '#FFD700',
     fontWeight: 'bold',
   },
   profileIcon: {

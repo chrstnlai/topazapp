@@ -35,7 +35,7 @@ export default function RootLayout() {
         <Stack.Screen name="+not-found" />
         <Stack.Screen name="details" options={{ title: 'Details' }} />
         <Stack.Screen name="addstamp" options={{ title: 'Details' }} />
-        <Stack.Screen name="Notification" />
+        <Stack.Screen name="Notification" options={{headerShown:false}}/>
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

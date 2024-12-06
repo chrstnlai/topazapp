@@ -12,54 +12,51 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'dark'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Wallet',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-         <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
+<Tabs
+  screenOptions={{
+    tabBarActiveTintColor: '#F5B702',
+    headerShown: false,
+    tabBarButton: HapticTab,
+    tabBarStyle: {
+      position: 'absolute',
+      bottom: 50,
+      width: 400,
+      left: '20%',
+      transform: [{ translateX: 15 }],
+      borderRadius: 20,
+      backgroundColor: '#000',
+      height: 70,
+      overflow: 'hidden',
+      shadowColor: '#000',
+      shadowOpacity: 0.2,
+      shadowOffset: { width: 0, height: 3 },
+      shadowRadius: 5,
+    },
+  }}
+>
+  <Tabs.Screen
+    name="index"
+    options={{
+      title: 'Wallet',
+      tabBarIcon: ({ color }) => <IconSymbol size={28} name="wallet.pass.fill" color={color} />,
+    }}
+  />
+  <Tabs.Screen
+    name="explore"
+    options={{
+      title: 'Explore',
+      tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+    }}
+  />
 
-      <Tabs.Screen
-        name="notification"
-        options={{
-          title: 'Notification',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-      
-  
-
-    </Tabs>
+  <Tabs.Screen
+    name="profile"
+    options={{
+      title: 'Profile',
+      tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+    }}
+  />
+</Tabs>
     
   );
 }

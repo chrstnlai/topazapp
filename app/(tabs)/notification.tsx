@@ -1,19 +1,8 @@
-let currentIndex = 0;
-
-function getCurrentImageIndex(): number {
-  return currentIndex;
-}
-
-function incrementImageIndex(imagesLength: number): number {
-  currentIndex = (currentIndex + 1) % imagesLength;
-  return currentIndex;
-}
-
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Image, View } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
 import { useLocalSearchParams } from 'expo-router';
+import { getCurrentImageIndex, incrementImageIndex } from './sharedState';
 
 export default function Notification() {
   const { changeImage, timestamp } = useLocalSearchParams<{ changeImage?: string; timestamp?: string }>();
@@ -34,29 +23,54 @@ export default function Notification() {
   const [imageIndex, setImageIndex] = useState(getCurrentImageIndex());
 
   useEffect(() => {
-    // If we should change the image (each navigation triggers a new timestamp),
-    // increment the index and update state.
     if (changeImage === 'true' && timestamp) {
       const newIndex = incrementImageIndex(images.length);
       setImageIndex(newIndex);
     } else {
-      // If not changing the image, just ensure we're showing the current index.
       setImageIndex(getCurrentImageIndex());
     }
   }, [changeImage, timestamp]);
 
   return (
-    <ThemedView style={styles.container}>
-      <View style={styles.imageContainer}>
-        <Image source={images[imageIndex]} style={styles.image} />
+    <>
+      <View style={styles.blackSection}>
+      <Image
+    source={require('@/assets/images/hojistore.png')}
+    style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
+  />
+    <Image
+    source={require('@/assets/images/hojititle.png')}
+    style={styles.titleImage}
+  />
       </View>
-      <View style={styles.scanContainer}>
-      </View>
-    </ThemedView>
+      <ThemedView style={styles.container}>
+        <View style={styles.imageContainer}>
+          <Image source={images[imageIndex]} style={styles.image} />
+        </View>
+        <View style={styles.scanContainer}></View>
+      </ThemedView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  blackSection: {
+    flex: 0.4,
+    backgroundColor: "#262626",
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+    overflow: 'hidden',
+  },
+  titleImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -67,9 +81,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   image: {
-    width: 600,
-    height: 400,
+    width: 700,
+    height: 450,
     resizeMode: 'contain',
+    transform: [{ translateX: 0 }, { translateY: -70 }],
   },
   scanContainer: {
     alignItems: 'center',
