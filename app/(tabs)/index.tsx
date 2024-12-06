@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  TextInput,
+  FlatList,
+  Dimensions,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
-import { getCurrentImageIndex } from './sharedState'; // Import from shared state
+import { ImageSourcePropType } from 'react-native';
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
   const router = useRouter();
 
   const images = [
@@ -22,67 +29,103 @@ export default function HomeScreen() {
     require('@/assets/images/hojicardfree.png'),
   ];
 
-  const [imageIndex, setImageIndex] = useState(getCurrentImageIndex());
+  const swipeImages = [
+    require('@/assets/images/hojicard.png'),
+    require('@/assets/images/bobafriend.png'),
+    require('@/assets/images/findnew.png'),
+  ];
 
-  // If you need the HomeScreen to update dynamically whenever the image changes
-  // you could implement a mechanism to re-render (e.g. by listening to focus events)
-  // For now, it will show the last known index at the time of navigation.
-  const handleSwipeRight = () => {
-    // If you also want to go backwards when swiping right:
-    setImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const windowWidth = Dimensions.get('window').width;
+
+  const handleImagePress = (image: ImageSourcePropType) => {
+    if (image === images[0]) {
+      // If the clicked image is hojicard.png, navigate to the notification page
+      router.push('/notification');
+    }
   };
-  
-  const handleCardPress = () => {
-    // Navigate to notification when the image is tapped
-    router.push('/notification');
-  };
+
+  const renderSwipeImage = ({ item }: { item: ImageSourcePropType }) => (
+    <TouchableOpacity onPress={() => handleImagePress(item)}>
+      <View style={styles.imageContainer}>
+        <Image source={item} style={styles.image} />
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.blackSection}>
-          <Text style={styles.welcomeText}>
-            Welcome back, <Text style={styles.highlight}>Sarah!</Text>
-          </Text>
-          <View style={styles.searchBar}>
-            <Ionicons name="search" size={20} color="#aaa" />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Can't find the card you’re looking for?"
-              placeholderTextColor="#aaa"
-            />
-          </View>
-        </View>
-
-        <View style={styles.remainingSection}>
-          <View style={{ marginTop: 20 }}>
-            <TouchableOpacity onPress={() => router.push('/notification')}>
-              <Image
-                source={images[imageIndex]} // Use the currentIndex image
-                style={styles.image}
-              />
-            </TouchableOpacity>
-          </View>
+    <View style={styles.container}>
+      <View style={styles.blackSection}>
+        <Text style={styles.welcomeText}>
+          Welcome back, <Text style={styles.highlight}>Sarah!</Text>
+        </Text>
+        <View style={styles.searchBar}>
+          <Ionicons name="search" size={20} color="#aaa" />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Can't find the card you’re looking for?"
+            placeholderTextColor="#aaa"
+          />
         </View>
       </View>
-    </>
+
+      <View style={styles.remainingSection}>
+        <FlatList
+          data={swipeImages} // Use the new swipeImages array here
+          renderItem={renderSwipeImage}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.flatListContent}
+          snapToAlignment="center"
+          decelerationRate="fast"
+          snapToInterval={windowWidth}
+          onMomentumScrollEnd={(event) => {
+            const index = Math.round(
+              event.nativeEvent.contentOffset.x / windowWidth
+            );
+            setCurrentIndex(index);
+          }}
+        />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  searchInput: {
+  container: {
     flex: 1,
-    marginLeft: 10,
-    fontSize: 16,
-    color: "#262626",
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  blackSection: {
+    flex: 1.5,
     backgroundColor: '#262626',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+    overflow: 'hidden',
+  },
+  remainingSection: {
+    flex: 3,
+    backgroundColor: '#f5f5f5',
+    alignItems: 'center',
+  },
+  imageContainer: {
+    width: Dimensions.get('window').width,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    width: 250,
+    height: 600,
+    resizeMode: 'contain',
+    position: 'relative',
+    top: -70,
+  },
+  flatListContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   welcomeText: {
     fontSize: 24,
@@ -95,45 +138,22 @@ const styles = StyleSheet.create({
     color: '#FFD700',
     fontWeight: 'bold',
   },
-  profileIcon: {
-    padding: 8,
-    backgroundColor: '#444444',
-    borderRadius: 50,
-  },
-  container: {
-    flex: 1,
-  },
-  blackSection: {
-    flex: 1.5,
-    backgroundColor: "#262626",
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderBottomLeftRadius: 50,
-    borderBottomRightRadius: 50,
-    overflow: 'hidden',
-  },
-  remainingSection: {
-    flex: 3,
-    backgroundColor: "#f5f5f5",
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    width: 250,
-    height: 600,
-    resizeMode: 'contain',
-    transform: [{ translateX: -10 }, { translateY: -150 }],
-  },
   searchBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#ECECEC",
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ECECEC',
     borderRadius: 20,
     paddingHorizontal: 10,
     height: 40,
-    width:350,
-    top:50,
+    width: 350,
+    top: 50,
     marginBottom: 20,
     transform: [{ translateX: -10 }, { translateY: -10 }],
+  },
+  searchInput: {
+    flex: 1,
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#262626',
   },
 });

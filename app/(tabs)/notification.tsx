@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
   titleImage: {
     position: 'absolute',
-    top: 0,
+    top: -1,
     left: 0,
     width: '100%',
     height: '100%',
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     width: 700,
     height: 450,
     resizeMode: 'contain',
-    transform: [{ translateX: 0 }, { translateY: -70 }],
+    transform: [{ translateX: 0 }, { translateY: -40 }],
   },
   scanContainer: {
     alignItems: 'center',
