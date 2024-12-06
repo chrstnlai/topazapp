@@ -58,7 +58,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <View style={styles.blackSection}>
         <Text style={styles.welcomeText}>
-          Welcome back, <Text style={styles.highlight}>Sarah!</Text>
+          Welcome back, <Text style={styles.highlight}>Christine!</Text>
         </Text>
         <View style={styles.searchBar}>
           <Ionicons name="search" size={20} color="#aaa" />

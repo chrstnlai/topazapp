@@ -58,12 +58,12 @@ export default function TabLayout() {
   />
 
   <Tabs.Screen
-    name="profile"
-    options={{
-      title: 'Profile',
-      headerShown: false,
-      tabBarIcon: ({ color }) => <IconSymbol size={28} name="" color={color} />,
-    }}
+   name="profile"
+   options={{
+     title: 'Profile',
+     headerShown: false,
+     tabBarIcon: ({ color }) => <IconSymbol size={28} name="person" color={color} />, // Use "person" for a person icon
+   }}
   />
 
   <Tabs.Screen

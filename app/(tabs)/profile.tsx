@@ -1,44 +1,92 @@
-import { StyleSheet, Image, Platform } from 'react-native';
-import { Link, Stack } from 'expo-router';
+import React from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+const ProfilePage = () => {
+  const userData = {
+    name: 'Christine Lai',
+    email: 'cmlai@usc.edu',
+    profilePicture: require('@/assets/images/christine .png'),
+    bio: 'Lover of food, culture, and technology. Aspiring to make the world a better place one app at a time.',
+  };
 
-export default function Profile() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-    
+    <ScrollView contentContainerStyle={styles.container}>
+      {/* Profile Picture */}
+      <Image source={userData.profilePicture} style={styles.profilePicture} />
       
-  
+      {/* Name */}
+      <Text style={styles.name}>{userData.name}</Text>
 
- 
+      {/* Email */}
+      <Text style={styles.email}>{userData.email}</Text>
 
-    </ParallaxScrollView>
+      {/* Bio */}
+      <Text style={styles.bio}>{userData.bio}</Text>
+
+      {/* Edit Profile Button */}
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Edit Profile</Text>
+      </TouchableOpacity>
+
+      {/* Logout Button */}
+      <TouchableOpacity style={[styles.button, styles.logoutButton]}>
+        <Text style={[styles.buttonText, styles.logoutButtonText]}>Log Out</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#f9f9f9',
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+  profilePicture: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    marginBottom: 20,
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 8,
+  },
+  email: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 16,
+  },
+  bio: {
+    fontSize: 14,
+    color: '#444',
+    textAlign: 'center',
+    marginBottom: 24,
+    paddingHorizontal: 20,
+  },
+  button: {
+    backgroundColor: 'orange',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  buttonText: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  logoutButton: {
+    backgroundColor: '#7679EC',
+  },
+  logoutButtonText: {
+    color: '#fff',
   },
 });
+
+export default ProfilePage;
