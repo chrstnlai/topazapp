@@ -3,9 +3,12 @@ import { StyleSheet, Image, View } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { useLocalSearchParams } from 'expo-router';
 import { getCurrentImageIndex, incrementImageIndex } from './sharedState';
+import { useRouter } from 'expo-router';
+
 
 export default function Notification() {
   const { changeImage, timestamp } = useLocalSearchParams<{ changeImage?: string; timestamp?: string }>();
+  const router = useRouter();
 
   const images = [
     require('@/assets/images/hojicard.png'),
